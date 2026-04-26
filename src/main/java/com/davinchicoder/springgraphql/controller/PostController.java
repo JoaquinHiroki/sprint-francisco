@@ -17,30 +17,38 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
 
+    /** Repositorio para acceder y manipular datos de publicaciones. */
     private final PostRepository postRepository;
+
+    /** Mapper para convertir PostDto a entidad Post. */
     private final PostMapper postMapper;
 
+    /** Obtiene publicaciones recientes con paginación (count, offset). */
     @QueryMapping
     public List<Post> getRecentPosts(@Argument int count, @Argument int offset) {
         return postRepository.getRecentPosts(count, offset);
     }
 
+    /** Obtiene una publicación por su ID o lanza PostNotFound. */
     @QueryMapping
     public Post getPostById(@Argument Long id) {
         return postRepository.getById(id).orElseThrow(PostNotFound::new);
     }
 
+    /** Obtiene todas las publicaciones. */
     @QueryMapping
     public List<Post> getAllPosts() {
         return postRepository.getAll();
     }
 
+    /** Elimina una publicación por ID o lanza PostNotFound. */
     @MutationMapping
     public Post deletePostById(@Argument Long id) {
 
         return postRepository.delete(id).orElseThrow(PostNotFound::new);
     }
 
+    /** Guarda una nueva publicación a partir de PostDto. */
     @MutationMapping
     public Post savePost(@Argument PostDto postDto) {
         Post post = postMapper.apply(postDto);

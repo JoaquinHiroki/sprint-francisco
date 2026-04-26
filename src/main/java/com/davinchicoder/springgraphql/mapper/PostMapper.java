@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
 
+/** Mapper que convierte un PostDto en una entidad Post para su procesamiento o persistencia. */
 @Component
 public class PostMapper implements Function<PostDto, Post> {
 

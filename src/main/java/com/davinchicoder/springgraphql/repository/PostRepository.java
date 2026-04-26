@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/** Repositorio en memoria que simula operaciones CRUD sobre Post sin usar base de datos. */
 @Repository
 public class PostRepository {
 
