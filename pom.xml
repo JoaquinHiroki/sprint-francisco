@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -31,34 +31,41 @@
     </properties>
     <dependencies>
         <dependency>
+            <!-- Starter de Spring GraphQL para crear APIs GraphQL en Spring Boot -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-graphql</artifactId>
         </dependency>
         <dependency>
+            <!-- Starter web para crear aplicaciones REST/HTTP con Spring MVC -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <dependency>
+            <!-- Lombok para generar código automáticamente (getters, setters, builders, etc.) -->
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
+            <!-- Dependencias para testing en Spring Boot (JUnit, Mockito, etc.) -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
+            <!-- Soporte para pruebas específicas de GraphQL en Spring -->
             <groupId>org.springframework.graphql</groupId>
             <artifactId>spring-graphql-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
+            <!-- Starter reactivo (WebFlux) para programación no bloqueante y asincrónica -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
         <dependency>
+            <!-- Librería para testing de flujos reactivos con Reactor -->
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-test</artifactId>
             <scope>test</scope>

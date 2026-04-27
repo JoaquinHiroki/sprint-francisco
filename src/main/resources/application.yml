@@ -1,3 +1,4 @@
+# Configura el nombre de la app y habilita GraphiQL en /graphiql para probar consultas GraphQL.
 spring:
   application:
     name: spring-graphql
