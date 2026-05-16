@@ -13,10 +13,17 @@ public class PostMapper implements Function<PostDto, Post> {
     @Override
     public Post apply(PostDto postDto) {
         return Post.builder()
-                .title(postDto.getTitle())
-                .author(postDto.getAuthor())
-                .content(postDto.getContent())
-                .imageUrl(postDto.getImageUrl())
-                .build();
+            .title(postDto.getTitle())
+            .author(postDto.getAuthor())
+            .content(postDto.getContent())
+            .genre(postDto.getGenre())
+            .imageUrl(postDto.getImageUrl())
+            .weapon(postDto.getWeapon())
+            .explosions(postDto.getExplosions())
+            .typeOfComedy(postDto.getTypeOfComedy())
+            .memeCount(postDto.getMemeCount())
+            .monster(postDto.getMonster())
+            .goreLevel(postDto.getGoreLevel())
+            .build();
     }
 }

@@ -60,11 +60,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <!-- Starter reactivo (WebFlux) para programación no bloqueante y asincrónica -->
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
-        </dependency>
-        <dependency>
             <!-- Librería para testing de flujos reactivos con Reactor -->
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-test</artifactId>

@@ -10,9 +10,11 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @Controller
 @RequiredArgsConstructor
 public class PostController {
@@ -22,6 +24,12 @@ public class PostController {
 
     /** Mapper para convertir PostDto a entidad Post. */
     private final PostMapper postMapper;
+
+    @QueryMapping
+    public List<Post> getPostsByGenre(@Argument String genre) {
+
+        return postRepository.getPostsByGenre(genre);
+    }
 
     /** Obtiene publicaciones recientes con paginación (count, offset). */
     @QueryMapping

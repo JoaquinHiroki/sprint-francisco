@@ -4,7 +4,14 @@ type Post {
     title: String,
     content: String,
     author: String,
+    genre: String,
     imageUrl: String,
+    weapon: String,
+    explosions: Int,
+    typeOfComedy: String,
+    memeCount: Int,
+    monster: String,
+    goreLevel: Int,
     createdAt: String,
     updatedAt: String,
     deletedAt: String,
@@ -23,6 +30,8 @@ type Query{
     getAllPosts: [Post]
     getRecentPosts(count:Int,offset:Int): [Post]
     getPostById(id: ID!): Post
+    #Important------
+    getPostsByGenre(genre: String!): [Post]
 }
 
 # Define las operaciones para modificar datos (mutations)

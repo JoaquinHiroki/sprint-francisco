@@ -13,36 +13,132 @@ import java.util.Optional;
 public class PostRepository {
 
     private final List<Post> POSTS = new ArrayList<>(
-            List.of(
-                    Post.builder().id(1L)
-                            .title("First Post")
-                            .content("This is the content of the first post")
-                            .author("John Doe")
-                            .imageUrl("https://example.com/image1.jpg")
-                            .createdAt(LocalDateTime.now())
-                            .updatedAt(LocalDateTime.now())
-                            .build(),
-                    Post.builder()
-                            .id(2L)
-                            .title("Second Post")
-                            .content("Content for the second post")
-                            .author("Jane Smith")
-                            .imageUrl("https://example.com/image2.jpg")
-                            .createdAt(LocalDateTime.now())
-                            .updatedAt(LocalDateTime.now())
-                            .build(),
-                    Post.builder()
-                            .id(3L)
-                            .title("Third Post")
-                            .content("Content for the third post")
-                            .author("Bob Wilson")
-                            .imageUrl("https://example.com/image3.jpg")
-                            .createdAt(LocalDateTime.now())
-                            .updatedAt(LocalDateTime.now())
-                            .build()
-            )
-    );
 
+        List.of(
+
+                /*
+                =================================================
+                ACTION MOVIES
+                =================================================
+                */
+
+                Post.builder()
+                        .id(1L)
+                        .title("John Wick")
+                        .genre("ACTION")
+
+                        // ACTION FIELDS
+                        .weapon("Pistol")
+                        .explosions(45)
+
+                        .imageUrl("https://example.com/johnwick.jpg")
+
+                        .createdAt(LocalDateTime.now())
+                        .updatedAt(LocalDateTime.now())
+                        .build(),
+
+                Post.builder()
+                        .id(2L)
+                        .title("Mad Max")
+                        .genre("ACTION")
+
+                        // ACTION FIELDS
+                        .weapon("Shotgun")
+                        .explosions(120)
+
+                        .imageUrl("https://example.com/madmax.jpg")
+
+                        .createdAt(LocalDateTime.now())
+                        .updatedAt(LocalDateTime.now())
+                        .build(),
+
+
+
+                /*
+                =================================================
+                COMEDY MOVIES
+                =================================================
+                */
+
+                Post.builder()
+                        .id(3L)
+                        .title("The Mask")
+                        .genre("COMEDY")
+
+                        // COMEDY FIELDS
+                        .typeOfComedy("Slapstick")
+                        .memeCount(80)
+
+                        .imageUrl("https://example.com/mask.jpg")
+
+                        .createdAt(LocalDateTime.now())
+                        .updatedAt(LocalDateTime.now())
+                        .build(),
+
+                Post.builder()
+                        .id(4L)
+                        .title("Superbad")
+                        .genre("COMEDY")
+
+                        // COMEDY FIELDS
+                        .typeOfComedy("Teen Comedy")
+                        .memeCount(95)
+
+                        .imageUrl("https://example.com/superbad.jpg")
+
+                        .createdAt(LocalDateTime.now())
+                        .updatedAt(LocalDateTime.now())
+                        .build(),
+
+
+
+                /*
+                =================================================
+                HORROR MOVIES
+                =================================================
+                */
+
+                Post.builder()
+                        .id(5L)
+                        .title("The Conjuring")
+                        .genre("HORROR")
+
+                        // HORROR FIELDS
+                        .monster("Demon")
+                        .goreLevel(70)
+
+                        .imageUrl("https://example.com/conjuring.jpg")
+
+                        .createdAt(LocalDateTime.now())
+                        .updatedAt(LocalDateTime.now())
+                        .build(),
+
+                Post.builder()
+                        .id(6L)
+                        .title("It")
+                        .genre("HORROR")
+
+                        // HORROR FIELDS
+                        .monster("Clown")
+                        .goreLevel(90)
+
+                        .imageUrl("https://example.com/it.jpg")
+
+                        .createdAt(LocalDateTime.now())
+                        .updatedAt(LocalDateTime.now())
+                        .build()
+        )
+);
+
+    
+    public List<Post> getPostsByGenre(String genre) {
+
+        return POSTS.stream()
+                .filter(post ->
+                        post.getGenre()
+                                .equalsIgnoreCase(genre))
+                .toList();
+    }
 
     public List<Post> getRecentPosts(int count, int offset) {
         return POSTS.stream()

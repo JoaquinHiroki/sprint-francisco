@@ -12,5 +12,12 @@ public class PostDto {
     private String title;
     private String content;
     private String author;
+    private String genre;
     private String imageUrl;
+    private String weapon;
+    private Integer explosions;
+    private String typeOfComedy;
+    private Integer memeCount;
+    private String monster;
+    private Integer goreLevel;
 }
