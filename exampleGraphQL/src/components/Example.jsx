@@ -1,114 +1,378 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Example() {
-    // Estado para guardar los posts obtenidos del backend
-    const [posts, setPosts] = useState([]);
-    // Estado que define qué campos queremos pedir dinámicamente a GraphQL
-    const [fields, setFields] = useState(["title"]);
-    // Estado para manejar errores (GraphQL o conexión)
+
+    /*
+    ==================================================
+    SUBJECT (ESTADO OBSERVADO)
+    ==================================================
+
+    React observará cambios en "genre".
+
+    Cuando "genre" cambie:
+    - React notificará componentes
+    - useEffect reaccionará automáticamente
+    - GraphQL cambiará el query
+
+    Esto representa el patrón Observer.
+    */
+    const [genre, setGenre] = useState("ACTION");
+
+
+
+    /*
+    ==================================================
+    ESTADO DE PELÍCULAS
+    ==================================================
+
+    Guarda la información obtenida desde GraphQL.
+    */
+    const [movies, setMovies] = useState([]);
+
+
+
+    /*
+    ==================================================
+    ESTADO DE ERRORES
+    ==================================================
+    */
     const [error, setError] = useState(null);
 
-    // Función que agrega o quita campos del arreglo (checkboxes)
-    const toggleField = (value) => {
-        setFields((prev) =>
-            prev.includes(value)
-                ? prev.filter((f) => f !== value) // elimina si ya existe
-                : [...prev, value] // agrega si no existe
-        );
+
+
+    /*
+    ==================================================
+    QUERIES DINÁMICOS
+    ==================================================
+
+    Cada género solicita información distinta.
+
+    Esto simula cómo Netflix solicita
+    diferentes datos dependiendo de la vista.
+    */
+    const queries = {
+
+        ACTION: `
+            query {
+                getPostsByGenre(genre:"ACTION") {
+                    id
+                    title
+                    weapon
+                    explosions
+                }
+            }
+        `,
+
+        COMEDY: `
+            query {
+                getPostsByGenre(genre:"COMEDY") {
+                    id
+                    title
+                    typeOfComedy
+                    memeCount
+                }
+            }
+        `,
+
+        HORROR: `
+            query {
+                getPostsByGenre(genre:"HORROR") {
+                    id
+                    title
+                    monster
+                    goreLevel
+                }
+            }
+        `
     };
 
-    // Función que hace la petición a GraphQL
-    const getPosts = async () => {
+
+
+    /*
+    ==================================================
+    OBSERVER
+    ==================================================
+
+    useEffect está OBSERVANDO "genre".
+
+    El arreglo [genre] funciona como:
+    - lista de dependencias
+    - suscripción
+    - observer
+
+    Cuando genre cambia:
+    - React detecta el cambio
+    - ejecuta automáticamente getMovies()
+
+    Esto es comportamiento Observer.
+    */
+    useEffect(() => {
+
+        getMovies();
+
+    }, [genre]);
+
+
+
+    /*
+    ==================================================
+    FETCH GRAPHQL
+    ==================================================
+    */
+    const getMovies = async () => {
+
         try {
-            // Convierte ["title", "author"] → "title\nauthor"
-            const queryFields = fields.join("\n");
 
-            const query = `
-                query {
-                    getAllPosts {
-                        id
-                        ${queryFields}
-                    }
+            /*
+            ==========================================
+            QUERY DINÁMICO
+            ==========================================
+
+            Dependiendo del género seleccionado,
+            se obtiene un query diferente.
+            */
+            const query = queries[genre];
+
+
+
+            const res = await fetch(
+                "http://localhost:8080/graphql",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({ query })
                 }
-            `;
+            );
 
-            const res = await fetch("http://localhost:8080/graphql", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ query })
-            });
 
-            // Conversión de respuesta a JSON
+
             const data = await res.json();
 
-            console.log("Response completa:", data);
+            console.log(data);
 
+
+
+            /*
+            ==========================================
+            MANEJO DE ERRORES
+            ==========================================
+            */
             if (data.errors) {
+
                 setError(data.errors[0]?.message);
-                setPosts([]);
+
+                setMovies([]);
+
                 return;
             }
 
-            setPosts(data?.data?.getAllPosts ?? []);
+
+
+            /*
+            ==========================================
+            ACTUALIZACIÓN REACTIVA
+            ==========================================
+
+            React actualizará automáticamente la UI
+            cuando movies cambie.
+            */
+            setMovies(
+                data?.data?.getPostsByGenre ?? []
+            );
+
+
+
             setError(null);
 
         } catch (err) {
+
             console.log(err);
+
             setError("Error de conexión");
-            setPosts([]);
+
+            setMovies([]);
         }
     };
 
+
+
     return (
-        <div style={{ padding: 20 }}>
-            <h1>Posts dinámicos</h1>
 
-            {error && <p style={{ color: "red" }}>{error}</p>}
+        <div>
 
-            <label>
-                <input
-                    type="checkbox"
-                    checked={fields.includes("title")}
-                    onChange={() => toggleField("title")}
-                />
-                Title
-            </label>
+            <h1>Netflix Dynamic GraphQL</h1>
 
-            <label>
-                <input
-                    type="checkbox"
-                    checked={fields.includes("author")}
-                    onChange={() => toggleField("author")}
-                />
-                Author
-            </label>
+            <p>
+                Género actual:
+                <strong>
+                    {" "}
+                    {genre}
+                </strong>
+            </p>
 
-            <label>
-                <input
-                    type="checkbox"
-                    checked={fields.includes("content")}
-                    onChange={() => toggleField("content")}
-                />
-                Content
-            </label>
 
-            <br /><br />
 
-            <button onClick={getPosts}>Cargar Posts</button>
+            {/* ======================================
+                BOTONES
+            ======================================
 
-            <ul  style={{listStyle: "none", padding:0}}>
-                {Array.isArray(posts) && posts.length > 0 ? (
-                    posts.map((post) => (
-                        <li key={post.id}>
-                            {fields.map((f) => post?.[f]).join(" | ")}
-                        </li>
+            Cuando se hace click:
+            - cambia genre
+            - React detecta cambio
+            - useEffect reacciona
+            - GraphQL cambia query
+            - UI cambia automáticamente
+
+            Flujo completo Observer.
+            ====================================== */}
+            <div className="genres">
+
+                <button
+                    onClick={() => setGenre("ACTION")}
+                >
+                    Acción
+                </button>
+
+
+
+                <button
+                    onClick={() => setGenre("COMEDY")}
+                >
+                    Comedia
+                </button>
+
+
+
+                <button
+                    onClick={() => setGenre("HORROR")}
+                >
+                    Terror
+                </button>
+
+            </div>
+
+
+
+            <br />
+
+
+
+            {error && (
+
+                <p style={{ color: "red" }}>
+                    {error}
+                </p>
+
+            )}
+
+
+
+            {/* ======================================
+                RENDERIZADO REACTIVO
+            ======================================
+
+            Cuando movies cambia:
+            React vuelve a renderizar automáticamente.
+            */}
+            <div className="movies-container">
+
+                {
+                    movies.map((movie) => (
+
+                        <div
+                            className="movie-card"
+                            key={movie.id}
+                        >
+
+                            <h3>
+                                {movie.title}
+                            </h3>
+
+
+
+                            {/* ACTION */}
+                            {movie.weapon && (
+
+                                <p>
+                                    Weapon:
+                                    {" "}
+                                    {movie.weapon}
+                                </p>
+
+                            )}
+
+
+
+                            {movie.explosions && (
+
+                                <p>
+                                    Explosions:
+                                    {" "}
+                                    {movie.explosions}
+                                </p>
+
+                            )}
+
+
+
+                            {/* COMEDY */}
+                            {movie.typeOfComedy && (
+
+                                <p>
+                                    Comedy:
+                                    {" "}
+                                    {movie.typeOfComedy}
+                                </p>
+
+                            )}
+
+
+
+                            {movie.memeCount && (
+
+                                <p>
+                                    Meme Count:
+                                    {" "}
+                                    {movie.memeCount}
+                                </p>
+
+                            )}
+
+
+
+                            {/* HORROR */}
+                            {movie.monster && (
+
+                                <p>
+                                    Monster:
+                                    {" "}
+                                    {movie.monster}
+                                </p>
+
+                            )}
+
+
+
+                            {movie.goreLevel && (
+
+                                <p>
+                                    Gore Level:
+                                    {" "}
+                                    {movie.goreLevel}
+                                </p>
+
+                            )}
+
+                        </div>
                     ))
-                ) : (
-                    <li>No hay posts</li>
-                )}
-            </ul>
+                }
+
+            </div>
+
         </div>
     );
 }
