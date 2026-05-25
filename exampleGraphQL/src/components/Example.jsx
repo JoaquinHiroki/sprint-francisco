@@ -7,27 +7,27 @@ export default function Example() {
     SUBJECT (ESTADO OBSERVADO)
     ==================================================
 
-    React observará cambios en "genre".
+    React observará cambios en "topic".
 
-    Cuando "genre" cambie:
+    Cuando "topic" cambie:
     - React notificará componentes
     - useEffect reaccionará automáticamente
     - GraphQL cambiará el query
 
     Esto representa el patrón Observer.
     */
-    const [genre, setGenre] = useState("ACTION");
+    const [topic, setTopic] = useState("PARTICIPANTES_2026");
 
 
 
     /*
     ==================================================
-    ESTADO DE PELÍCULAS
+    ESTADO DE ENTRADAS DEL MUNDIAL
     ==================================================
 
     Guarda la información obtenida desde GraphQL.
     */
-    const [movies, setMovies] = useState([]);
+    const [entries, setEntries] = useState([]);
 
 
 
@@ -45,42 +45,48 @@ export default function Example() {
     QUERIES DINÁMICOS
     ==================================================
 
-    Cada género solicita información distinta.
+    Cada tópico solicita información distinta.
 
-    Esto simula cómo Netflix solicita
+    Esto simula cómo una app real solicita
     diferentes datos dependiendo de la vista.
     */
     const queries = {
 
-        ACTION: `
+        PARTICIPANTES_2026: `
             query {
-                getPostsByGenre(genre:"ACTION") {
+                getPostsByTopic(topic: "PARTICIPANTES_2026") {
                     id
                     title
-                    weapon
-                    explosions
+                    confederation
+                    fifaRanking
+                    coach
+                    group
                 }
             }
         `,
 
-        COMEDY: `
+        CAMPEONES: `
             query {
-                getPostsByGenre(genre:"COMEDY") {
+                getPostsByTopic(topic: "CAMPEONES") {
                     id
                     title
-                    typeOfComedy
-                    memeCount
+                    championYear
+                    titlesCount
+                    lastFinal
+                    goalsInFinals
                 }
             }
         `,
 
-        HORROR: `
+        CIUDADES_SEDE_2026: `
             query {
-                getPostsByGenre(genre:"HORROR") {
+                getPostsByTopic(topic: "CIUDADES_SEDE_2026") {
                     id
                     title
-                    monster
-                    goreLevel
+                    country
+                    stadiumName
+                    stadiumCapacity
+                    region
                 }
             }
         `
@@ -93,24 +99,24 @@ export default function Example() {
     OBSERVER
     ==================================================
 
-    useEffect está OBSERVANDO "genre".
+    useEffect está OBSERVANDO "topic".
 
-    El arreglo [genre] funciona como:
+    El arreglo [topic] funciona como:
     - lista de dependencias
     - suscripción
     - observer
 
-    Cuando genre cambia:
+    Cuando topic cambia:
     - React detecta el cambio
-    - ejecuta automáticamente getMovies()
+    - ejecuta automáticamente getEntries()
 
     Esto es comportamiento Observer.
     */
     useEffect(() => {
 
-        getMovies();
+        getEntries();
 
-    }, [genre]);
+    }, [topic]);
 
 
 
@@ -119,7 +125,7 @@ export default function Example() {
     FETCH GRAPHQL
     ==================================================
     */
-    const getMovies = async () => {
+    const getEntries = async () => {
 
         try {
 
@@ -128,10 +134,10 @@ export default function Example() {
             QUERY DINÁMICO
             ==========================================
 
-            Dependiendo del género seleccionado,
+            Dependiendo del tópico seleccionado,
             se obtiene un query diferente.
             */
-            const query = queries[genre];
+            const query = queries[topic];
 
 
 
@@ -165,7 +171,7 @@ export default function Example() {
 
                 setError(data.errors[0]?.message);
 
-                setMovies([]);
+                setEntries([]);
 
                 return;
             }
@@ -178,10 +184,10 @@ export default function Example() {
             ==========================================
 
             React actualizará automáticamente la UI
-            cuando movies cambie.
+            cuando entries cambie.
             */
-            setMovies(
-                data?.data?.getPostsByGenre ?? []
+            setEntries(
+                data?.data?.getPostsByTopic ?? []
             );
 
 
@@ -192,9 +198,9 @@ export default function Example() {
 
             console.log(err);
 
-            setError("Error de conexión");
+            setError("Error de conexión — ¿está corriendo el backend?");
 
-            setMovies([]);
+            setEntries([]);
         }
     };
 
@@ -204,13 +210,13 @@ export default function Example() {
 
         <div>
 
-            <h1>Netflix Dynamic GraphQL</h1>
+            <h1>Mundial 2026 — Dynamic GraphQL</h1>
 
             <p>
-                Género actual:
+                Tópico actual:
                 <strong>
                     {" "}
-                    {genre}
+                    {topic}
                 </strong>
             </p>
 
@@ -221,7 +227,7 @@ export default function Example() {
             ======================================
 
             Cuando se hace click:
-            - cambia genre
+            - cambia topic
             - React detecta cambio
             - useEffect reacciona
             - GraphQL cambia query
@@ -232,25 +238,25 @@ export default function Example() {
             <div className="genres">
 
                 <button
-                    onClick={() => setGenre("ACTION")}
+                    onClick={() => setTopic("PARTICIPANTES_2026")}
                 >
-                    Acción
+                    Participantes 2026
                 </button>
 
 
 
                 <button
-                    onClick={() => setGenre("COMEDY")}
+                    onClick={() => setTopic("CAMPEONES")}
                 >
-                    Comedia
+                    Campeones
                 </button>
 
 
 
                 <button
-                    onClick={() => setGenre("HORROR")}
+                    onClick={() => setTopic("CIUDADES_SEDE_2026")}
                 >
-                    Terror
+                    Ciudades Sede 2026
                 </button>
 
             </div>
@@ -275,94 +281,166 @@ export default function Example() {
                 RENDERIZADO REACTIVO
             ======================================
 
-            Cuando movies cambia:
+            Cuando entries cambia:
             React vuelve a renderizar automáticamente.
             */}
             <div className="movies-container">
 
                 {
-                    movies.map((movie) => (
+                    entries.map((entry) => (
 
                         <div
                             className="movie-card"
-                            key={movie.id}
+                            key={entry.id}
                         >
 
                             <h3>
-                                {movie.title}
+                                {entry.title}
                             </h3>
 
 
 
-                            {/* ACTION */}
-                            {movie.weapon && (
+                            {/* PARTICIPANTES_2026 */}
+                            {entry.confederation && (
 
                                 <p>
-                                    Weapon:
+                                    Confederación:
                                     {" "}
-                                    {movie.weapon}
+                                    {entry.confederation}
                                 </p>
 
                             )}
 
 
 
-                            {movie.explosions && (
+                            {entry.fifaRanking && (
 
                                 <p>
-                                    Explosions:
+                                    Ranking FIFA:
                                     {" "}
-                                    {movie.explosions}
+                                    #{entry.fifaRanking}
                                 </p>
 
                             )}
 
 
 
-                            {/* COMEDY */}
-                            {movie.typeOfComedy && (
+                            {entry.coach && (
 
                                 <p>
-                                    Comedy:
+                                    Entrenador:
                                     {" "}
-                                    {movie.typeOfComedy}
+                                    {entry.coach}
                                 </p>
 
                             )}
 
 
 
-                            {movie.memeCount && (
+                            {entry.group && (
 
                                 <p>
-                                    Meme Count:
+                                    Grupo:
                                     {" "}
-                                    {movie.memeCount}
+                                    {entry.group}
                                 </p>
 
                             )}
 
 
 
-                            {/* HORROR */}
-                            {movie.monster && (
+                            {/* CAMPEONES */}
+                            {entry.championYear && (
 
                                 <p>
-                                    Monster:
+                                    Año campeón:
                                     {" "}
-                                    {movie.monster}
+                                    {entry.championYear}
                                 </p>
 
                             )}
 
 
 
-                            {movie.goreLevel && (
+                            {entry.titlesCount && (
 
                                 <p>
-                                    Gore Level:
+                                    Títulos totales:
                                     {" "}
-                                    {movie.goreLevel}
+                                    {entry.titlesCount}
+                                </p>
+
+                            )}
+
+
+
+                            {entry.lastFinal && (
+
+                                <p>
+                                    Última final vs:
+                                    {" "}
+                                    {entry.lastFinal}
+                                </p>
+
+                            )}
+
+
+
+                            {entry.goalsInFinals && (
+
+                                <p>
+                                    Goles en finales:
+                                    {" "}
+                                    {entry.goalsInFinals}
+                                </p>
+
+                            )}
+
+
+
+                            {/* CIUDADES_SEDE_2026 */}
+                            {entry.country && (
+
+                                <p>
+                                    País:
+                                    {" "}
+                                    {entry.country}
+                                </p>
+
+                            )}
+
+
+
+                            {entry.stadiumName && (
+
+                                <p>
+                                    Estadio:
+                                    {" "}
+                                    {entry.stadiumName}
+                                </p>
+
+                            )}
+
+
+
+                            {entry.stadiumCapacity && (
+
+                                <p>
+                                    Capacidad:
+                                    {" "}
+                                    {entry.stadiumCapacity.toLocaleString()}
+                                </p>
+
+                            )}
+
+
+
+                            {entry.region && (
+
+                                <p>
+                                    Región:
+                                    {" "}
+                                    {entry.region}
                                 </p>
 
                             )}
