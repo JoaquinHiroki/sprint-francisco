@@ -14,16 +14,23 @@ public class PostMapper implements Function<PostDto, Post> {
     public Post apply(PostDto postDto) {
         return Post.builder()
             .title(postDto.getTitle())
-            .author(postDto.getAuthor())
-            .content(postDto.getContent())
-            .genre(postDto.getGenre())
             .imageUrl(postDto.getImageUrl())
-            .weapon(postDto.getWeapon())
-            .explosions(postDto.getExplosions())
-            .typeOfComedy(postDto.getTypeOfComedy())
-            .memeCount(postDto.getMemeCount())
-            .monster(postDto.getMonster())
-            .goreLevel(postDto.getGoreLevel())
+            .topic(postDto.getTopic())
+            // PARTICIPANTES_2026
+            .confederation(postDto.getConfederation())
+            .fifaRanking(postDto.getFifaRanking())
+            .coach(postDto.getCoach())
+            .group(postDto.getGroup())
+            // CAMPEONES
+            .championYear(postDto.getChampionYear())
+            .titlesCount(postDto.getTitlesCount())
+            .lastFinal(postDto.getLastFinal())
+            .goalsInFinals(postDto.getGoalsInFinals())
+            // CIUDADES_SEDE_2026
+            .country(postDto.getCountry())
+            .stadiumName(postDto.getStadiumName())
+            .stadiumCapacity(postDto.getStadiumCapacity())
+            .region(postDto.getRegion())
             .build();
     }
 }

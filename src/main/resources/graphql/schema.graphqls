@@ -1,41 +1,73 @@
-# Define el tipo Post (estructura de datos que se puede consultar en la API)
+# Tipo Post adaptado al Mundial 2026 — los campos específicos se usan según el tópico
 type Post {
     id: ID!
-    title: String,
-    content: String,
-    author: String,
-    genre: String,
-    imageUrl: String,
-    weapon: String,
-    explosions: Int,
-    typeOfComedy: String,
-    memeCount: Int,
-    monster: String,
-    goreLevel: Int,
-    createdAt: String,
-    updatedAt: String,
-    deletedAt: String,
+    title: String
+    imageUrl: String
+
+    # Tópico: PARTICIPANTES_2026 | CAMPEONES | CIUDADES_SEDE_2026
+    topic: String
+
+    # ── PARTICIPANTES_2026 ────────────────────────────────────────────────────
+    confederation: String
+    fifaRanking: Int
+    coach: String
+    group: String
+
+    # ── CAMPEONES ─────────────────────────────────────────────────────────────
+    championYear: Int
+    titlesCount: Int
+    lastFinal: String
+    goalsInFinals: Int
+
+    # ── CIUDADES_SEDE_2026 ────────────────────────────────────────────────────
+    country: String
+    stadiumName: String
+    stadiumCapacity: Int
+    region: String
+
+    createdAt: String
+    updatedAt: String
+    deletedAt: String
 }
 
-# Define el input PostDto (datos que el cliente puede enviar para crear/guardar un Post)
-input PostDto{
-    title: String,
-    content: String,
-    author: String,
-    imageUrl: String,
+# Input para crear una nueva entrada (campos opcionales según el tópico)
+input PostDto {
+    title: String
+    imageUrl: String
+    topic: String
+
+    # PARTICIPANTES_2026
+    confederation: String
+    fifaRanking: Int
+    coach: String
+    group: String
+
+    # CAMPEONES
+    championYear: Int
+    titlesCount: Int
+    lastFinal: String
+    goalsInFinals: Int
+
+    # CIUDADES_SEDE_2026
+    country: String
+    stadiumName: String
+    stadiumCapacity: Int
+    region: String
 }
 
-# Define las consultas disponibles para obtener datos (queries)
-type Query{
+# Consultas disponibles
+type Query {
     getAllPosts: [Post]
-    getRecentPosts(count:Int,offset:Int): [Post]
+    getRecentPosts(count: Int, offset: Int): [Post]
     getPostById(id: ID!): Post
-    #Important------
-    getPostsByGenre(genre: String!): [Post]
+
+    # Query dinámico: muestra campos distintos según el tópico seleccionado
+    # Valores válidos: PARTICIPANTES_2026 | CAMPEONES | CIUDADES_SEDE_2026
+    getPostsByTopic(topic: String!): [Post]
 }
 
-# Define las operaciones para modificar datos (mutations)
-type Mutation{
-    deletePostById(id:ID!): Post
+# Operaciones de modificación
+type Mutation {
+    deletePostById(id: ID!): Post
     savePost(postDto: PostDto!): Post
 }

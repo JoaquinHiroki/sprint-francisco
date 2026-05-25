@@ -10,14 +10,17 @@ import lombok.Data;
 public class PostDto {
 
     private String title;
-    private String content;
-    private String author;
-    private String genre;
     private String imageUrl;
-    private String weapon;
-    private Integer explosions;
-    private String typeOfComedy;
-    private Integer memeCount;
-    private String monster;
-    private Integer goreLevel;
+    private String topic;
+    private String confederation;
+    private Integer fifaRanking;
+    private String coach;
+    private String group;
+    private Integer titlesCount;
+    private String lastFinal;
+    private Integer goalsInFinals;
+    private String country;
+    private String stadiumName;
+    private Integer stadiumCapacity;
+    private String region;
 }

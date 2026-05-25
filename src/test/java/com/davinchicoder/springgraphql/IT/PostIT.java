@@ -24,8 +24,7 @@ public class PostIT {
                     getAllPosts {
                         id
                         title
-                        content
-                        author
+                        topic
                     }
                 }
                 """;
@@ -34,7 +33,7 @@ public class PostIT {
                 .execute()
                 .path("data.getAllPosts")
                 .entityList(Post.class)
-                .hasSize(3);
+                .hasSize(15);
     }
 
     @Test
@@ -42,15 +41,18 @@ public class PostIT {
         String mutation = """
                 mutation {
                     savePost(postDto: {
-                        title: "Test Post",
-                        content: "Test Content",
-                        author: "Test Author",
-                        imageUrl: "Test Image url",
+                        title: "United States",
+                        topic: "PARTICIPANTES_2026",
+                        confederation: "CONCACAF",
+                        fifaRanking: 14,
+                        coach: "Mauricio Pochettino",
+                        group: "F"
                     }) {
                         id
                         title
-                        content
-                        author
+                        topic
+                        confederation
+                        fifaRanking
                     }
                 }
                 """;
@@ -61,9 +63,9 @@ public class PostIT {
                 .entity(Post.class)
                 .satisfies(post -> {
                     assertNotNull(post.getId());
-                    assertEquals("Test Post", post.getTitle());
-                    assertEquals("Test Content", post.getContent());
-                    assertEquals("Test Author", post.getAuthor());
+                    assertEquals("United States", post.getTitle());
+                    assertEquals("PARTICIPANTES_2026", post.getTopic());
+                    assertEquals("CONCACAF", post.getConfederation());
                 });
     }
 }

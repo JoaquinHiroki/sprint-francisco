@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/** Repositorio en memoria que simula operaciones CRUD sobre Post sin usar base de datos. */
+/** Repositorio en memoria con datos del Mundial 2026. */
 @Repository
 public class PostRepository {
 
@@ -16,127 +16,197 @@ public class PostRepository {
 
         List.of(
 
-                /*
-                =================================================
-                ACTION MOVIES
-                =================================================
-                */
 
-                Post.builder()
-                        .id(1L)
-                        .title("John Wick")
-                        .genre("ACTION")
+            Post.builder()
+                .id(1L)
+                .title("Argentina")
+                .topic("PARTICIPANTES_2026")
+                .confederation("CONMEBOL")
+                .fifaRanking(1)
+                .coach("Lionel Scaloni")
+                .group("J")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build(),
 
-                        // ACTION FIELDS
-                        .weapon("Pistol")
-                        .explosions(45)
+            Post.builder()
+                .id(2L)
+                .title("France")
+                .topic("PARTICIPANTES_2026")
+                .confederation("UEFA")
+                .fifaRanking(2)
+                .coach("Didier Deschamps")
+                .group("I")
+                .updatedAt(LocalDateTime.now())
+                .build(),
 
-                        .imageUrl("https://example.com/johnwick.jpg")
+            Post.builder()
+                .id(3L)
+                .title("Spain")
+                .topic("PARTICIPANTES_2026")
+                .confederation("UEFA")
+                .fifaRanking(3)
+                .coach("Luis de la Fuente")
+                .group("H")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build(),
 
-                        .createdAt(LocalDateTime.now())
-                        .updatedAt(LocalDateTime.now())
-                        .build(),
+            Post.builder()
+                .id(4L)
+                .title("Brazil")
+                .topic("PARTICIPANTES_2026")
+                .confederation("CONMEBOL")
+                .fifaRanking(5)
+                .coach("Ancelotti")
+                .group("C")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build(),
 
-                Post.builder()
-                        .id(2L)
-                        .title("Mad Max")
-                        .genre("ACTION")
-
-                        // ACTION FIELDS
-                        .weapon("Shotgun")
-                        .explosions(120)
-
-                        .imageUrl("https://example.com/madmax.jpg")
-
-                        .createdAt(LocalDateTime.now())
-                        .updatedAt(LocalDateTime.now())
-                        .build(),
-
-
-
-                /*
-                =================================================
-                COMEDY MOVIES
-                =================================================
-                */
-
-                Post.builder()
-                        .id(3L)
-                        .title("The Mask")
-                        .genre("COMEDY")
-
-                        // COMEDY FIELDS
-                        .typeOfComedy("Slapstick")
-                        .memeCount(80)
-
-                        .imageUrl("https://example.com/mask.jpg")
-
-                        .createdAt(LocalDateTime.now())
-                        .updatedAt(LocalDateTime.now())
-                        .build(),
-
-                Post.builder()
-                        .id(4L)
-                        .title("Superbad")
-                        .genre("COMEDY")
-
-                        // COMEDY FIELDS
-                        .typeOfComedy("Teen Comedy")
-                        .memeCount(95)
-
-                        .imageUrl("https://example.com/superbad.jpg")
-
-                        .createdAt(LocalDateTime.now())
-                        .updatedAt(LocalDateTime.now())
-                        .build(),
+            Post.builder()
+                .id(5L)
+                .title("Mexico")
+                .topic("PARTICIPANTES_2026")
+                .confederation("CONCACAF")
+                .fifaRanking(15)
+                .coach("Javier Aguirre")
+                .group("A")
+                .updatedAt(LocalDateTime.now())
+                .build(),
 
 
+            // CAMPEONES
 
-                /*
-                =================================================
-                HORROR MOVIES
-                =================================================
-                */
 
-                Post.builder()
-                        .id(5L)
-                        .title("The Conjuring")
-                        .genre("HORROR")
+            Post.builder()
+                .id(6L)
+                .title("Brazil")
+                .topic("CAMPEONES")
+                .championYear(2002)
+                .titlesCount(5)
+                .lastFinal("Germany")
+                .goalsInFinals(18)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build(),
 
-                        // HORROR FIELDS
-                        .monster("Demon")
-                        .goreLevel(70)
+            Post.builder()
+                .id(7L)
+                .title("Germany")
+                .topic("CAMPEONES")
+                .championYear(2014)
+                .titlesCount(4)
+                .lastFinal("Argentina")
+                .goalsInFinals(18)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build(),
 
-                        .imageUrl("https://example.com/conjuring.jpg")
+            Post.builder()
+                .id(8L)
+                .title("Argentina")
+                .topic("CAMPEONES")
+                .championYear(2022)
+                .titlesCount(3)
+                .lastFinal("France")
+                .goalsInFinals(15)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build(),
 
-                        .createdAt(LocalDateTime.now())
-                        .updatedAt(LocalDateTime.now())
-                        .build(),
+            Post.builder()
+                .id(9L)
+                .title("France")
+                .topic("CAMPEONES")
+                .championYear(2018)
+                .titlesCount(2)
+                .lastFinal("Croatia")
+                .goalsInFinals(12)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build(),
 
-                Post.builder()
-                        .id(6L)
-                        .title("It")
-                        .genre("HORROR")
+            Post.builder()
+                .id(10L)
+                .title("Spain")
+                .topic("CAMPEONES")
+                .championYear(2010)
+                .titlesCount(1)
+                .lastFinal("Netherlands")
+                .goalsInFinals(8)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build(),
 
-                        // HORROR FIELDS
-                        .monster("Clown")
-                        .goreLevel(90)
+            // CIUDADES 
 
-                        .imageUrl("https://example.com/it.jpg")
+            Post.builder()
+                .id(11L)
+                .title("New York / New Jersey")
+                .topic("CIUDADES_SEDE_2026")
+                .country("USA")
+                .stadiumName("MetLife Stadium")
+                .stadiumCapacity(82500)
+                .region("Northeast")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build(),
 
-                        .createdAt(LocalDateTime.now())
-                        .updatedAt(LocalDateTime.now())
-                        .build()
+            Post.builder()
+                .id(12L)
+                .title("Los Angeles")
+                .topic("CIUDADES_SEDE_2026")
+                .country("USA")
+                .stadiumName("SoFi Stadium")
+                .stadiumCapacity(70240)
+                .region("West")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build(),
+
+            Post.builder()
+                .id(13L)
+                .title("Dallas")
+                .topic("CIUDADES_SEDE_2026")
+                .country("USA")
+                .stadiumName("AT&T Stadium")
+                .stadiumCapacity(80000)
+                .region("South")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build(),
+
+            Post.builder()
+                .id(14L)
+                .title("Mexico City")
+                .topic("CIUDADES_SEDE_2026")
+                .country("Mexico")
+                .stadiumName("Estadio Azteca")
+                .stadiumCapacity(87000)
+                .region("Central")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build(),
+
+            Post.builder()
+                .id(15L)
+                .title("Toronto")
+                .topic("CIUDADES_SEDE_2026")
+                .country("Canada")
+                .stadiumName("BMO Field")
+                .stadiumCapacity(45000)
+                .region("East")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build()
         )
-);
+    );
 
-    
-    public List<Post> getPostsByGenre(String genre) {
-
+    public List<Post> getPostsByTopic(String topic) {
         return POSTS.stream()
-                .filter(post ->
-                        post.getGenre()
-                                .equalsIgnoreCase(genre))
+                .filter(post -> post.getDeletedAt() == null)
+                .filter(post -> post.getTopic().equalsIgnoreCase(topic))
                 .toList();
     }
 
@@ -150,7 +220,6 @@ public class PostRepository {
     public Post save(Post post) {
         post.setId(this.getNextId());
         post.setCreatedAt(LocalDateTime.now());
-
         POSTS.add(post);
         return post;
     }
@@ -159,9 +228,7 @@ public class PostRepository {
         Optional<Post> postToDelete = POSTS.stream()
                 .filter(post -> post.getId().equals(id))
                 .findFirst();
-
         postToDelete.ifPresent(post -> post.setDeletedAt(LocalDateTime.now()));
-
         return postToDelete;
     }
 
@@ -176,5 +243,4 @@ public class PostRepository {
     private Long getNextId() {
         return POSTS.stream().mapToLong(Post::getId).max().orElse(0L) + 1L;
     }
-
 }
