@@ -1,16 +1,4 @@
-# 📚 Documentación del Proyecto Spring GraphQL
-# Creditos para: DavinchiCoder
 
-## Descripción General
-
-Este proyecto es una aplicación **Spring Boot** que implementa una API GraphQL para la gestión de posts/publicaciones.
-La aplicación utiliza las siguientes tecnologías principales:
-
-- **Spring Boot 3.5.6**
-- **Spring GraphQL**
-- **Java 21**
-- **Lombok**
-- **Maven** como gestor de dependencias
 
 ## 🏗️ Arquitectura del Proyecto
 
