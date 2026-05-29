@@ -5,12 +5,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-/**
- * Credits: DavinchiCoder
- * Subject concreto del patrón Observer.
- * Spring inyecta automáticamente todos los beans TopicObserver disponibles,
- * garantizando que cada observador se registre sin acoplamiento manual.
- */
 @Component
 public class WorldCupTopicSubject implements TopicSubject {
 

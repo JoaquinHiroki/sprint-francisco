@@ -8,14 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/** Repositorio en memoria con datos del Mundial 2026. */
 @Repository
 public class PostRepository {
 
     private final List<Post> POSTS = new ArrayList<>(
 
         List.of(
-
 
             Post.builder()
                 .id(1L)
@@ -74,10 +72,6 @@ public class PostRepository {
                 .group("A")
                 .updatedAt(LocalDateTime.now())
                 .build(),
-
-
-            // CAMPEONES
-
 
             Post.builder()
                 .id(6L)
@@ -138,8 +132,6 @@ public class PostRepository {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build(),
-
-            // CIUDADES 
 
             Post.builder()
                 .id(11L)

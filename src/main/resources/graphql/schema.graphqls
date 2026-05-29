@@ -1,72 +1,50 @@
-# Tipo Post adaptado al Mundial 2026 — los campos específicos se usan según el tópico
 type Post {
     id: ID!
     title: String
     imageUrl: String
-
-    # Tópico: PARTICIPANTES_2026 | CAMPEONES | CIUDADES_SEDE_2026
     topic: String
-
-    # ── PARTICIPANTES_2026 ────────────────────────────────────────────────────
     confederation: String
     fifaRanking: Int
     coach: String
     group: String
-
-    # ── CAMPEONES ─────────────────────────────────────────────────────────────
     championYear: Int
     titlesCount: Int
     lastFinal: String
     goalsInFinals: Int
-
-    # ── CIUDADES_SEDE_2026 ────────────────────────────────────────────────────
     country: String
     stadiumName: String
     stadiumCapacity: Int
     region: String
-
     createdAt: String
     updatedAt: String
     deletedAt: String
 }
 
-# Input para crear una nueva entrada (campos opcionales según el tópico)
 input PostDto {
     title: String
     imageUrl: String
     topic: String
-
-    # PARTICIPANTES_2026
     confederation: String
     fifaRanking: Int
     coach: String
     group: String
-
-    # CAMPEONES
     championYear: Int
     titlesCount: Int
     lastFinal: String
     goalsInFinals: Int
-
-    # CIUDADES_SEDE_2026
     country: String
     stadiumName: String
     stadiumCapacity: Int
     region: String
 }
 
-# Consultas disponibles
 type Query {
     getAllPosts: [Post]
     getRecentPosts(count: Int, offset: Int): [Post]
     getPostById(id: ID!): Post
-
-    # Query dinámico: muestra campos distintos según el tópico seleccionado
-    # Valores válidos: PARTICIPANTES_2026 | CAMPEONES | CIUDADES_SEDE_2026
     getPostsByTopic(topic: String!): [Post]
 }
 
-# Operaciones de modificación
 type Mutation {
     deletePostById(id: ID!): Post
     savePost(postDto: PostDto!): Post

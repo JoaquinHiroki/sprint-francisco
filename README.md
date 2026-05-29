@@ -1,194 +1,99 @@
+# Spring GraphQL — Mundial 2026
 
+Backend hecho con Spring Boot + Spring GraphQL que expone datos del Mundial 2026 usando Observer y Factory Method
 
-## 🏗️ Arquitectura del Proyecto
+---
 
-La aplicación sigue una arquitectura de capas bien definida:
+## Integracion de los patrones
 
-``` 
-src/main/java/com/davinchicoder/springgraphql/
-├── controller/     # Controladores GraphQL
-├── dto/           # Data Transfer Objects
-├── entity/        # Entidades del dominio
-├── mapper/        # Mapeadores de datos
-├── repository/    # Capa de acceso a datos
-└── SpringGraphqlApplication.java  # Clase principal
-```
+La idea central es que cada vez que alguien consulta un tópico (`PARTICIPANTES_2026`, `CAMPEONES` o `CIUDADES_SEDE_2026`), dos cosas pasan de forma independiente:
 
-## 📋 Componentes Principales
+1. **Factory Method** se encarga de crear los posts con los campos correctos según el tópico.
+2. **Observer** se encarga de reaccionar cuando se consulta un tópico por ejemplo logueando cuántos resultados se encontraron.
 
-### 1. **PostController**
+El controller es el punto donde ambos se encuentran:
 
-Controlador GraphQL que maneja las operaciones CRUD de posts:
+```java
+// Al guardar: Factory Method elige qué fábrica construye el Post
+@MutationMapping
+public Post savePost(@Argument PostDto postDto) {
+    PostFactory factory = postFactoryProvider.getFactory(postDto.getTopic());
+    Post post = factory.createPost(postDto);
+    return postRepository.save(post);
+}
 
-#### Queries disponibles:
-
-- `getAllPosts()`: Obtiene todos los posts
-- `getRecentPosts(count, offset)`: Obtiene posts recientes con paginación
-- `getPostById(id)`: Obtiene un post específico por ID
-
-#### Mutations disponibles:
-
-- `savePost(postDto)`: Crea un nuevo post
-- `deletePostById(id)`: Elimina un post por ID
-
-### 2. **Entidad Post**
-
-La entidad principal que representa una publicación con los siguientes campos:
-
-- `id`: Identificador único
-- `title`: Título del post
-- `content`: Contenido del post
-- `author`: Autor del post
-- `imageUrl`: URL de la imagen
-- : Fecha de creación `createdAt`
-- : Fecha de actualización `updatedAt`
-- : Fecha de eliminación (soft delete) `deletedAt`
-
-### 3. **PostDto**
-
-DTO utilizado para la creación y actualización de posts:
-
-- `title`: Título
-- `content`: Contenido
-- `author`: Autor
-- `imageUrl`: URL de la imagen
-
-### 4. **Schema GraphQL**
-
-Definido en , incluye: `schema.graphqls`
-
-- Tipo con todos sus campos `Post`
-- Input para operaciones de escritura `PostDto`
-- Queries para lectura de datos
-- Mutations para modificación de datos
-
-## 🚀 Configuración y Ejecución
-
-### Prerrequisitos
-
-- Java 21
-- Maven 3.x
-
-### Comandos de ejecución
-
-``` bash
-# Compilar el proyecto
-mvn clean compile
-
-# Ejecutar tests
-mvn test
-
-# Ejecutar la aplicación
-mvn spring-boot:run
-```
-
-### Acceso a GraphQL
-
-Una vez iniciada la aplicación, puedes acceder a:
-
-- **GraphQL Playground**: `http://localhost:8080/graphiql`
-- **Endpoint GraphQL**: `http://localhost:8080/graphql`
-
-## 📊 Ejemplos de Uso
-
-### Query - Obtener todos los posts
-
-``` graphql
-query {
-  getAllPosts {
-    id
-    title
-    content
-    author
-    imageUrl
-    createdAt
-  }
+// Al consultar: Observer notifica a todos los interesados
+@QueryMapping
+public List<Post> getPostsByTopic(@Argument String topic) {
+    List<Post> results = postRepository.getPostsByTopic(topic);
+    topicSubject.notifyObservers(WorldCupTopic.valueOf(topic.toUpperCase()), results);
+    return results;
 }
 ```
 
-### Query - Obtener posts recientes
+---
 
-``` graphql
-query {
-  getRecentPosts(count: 10, offset: 0) {
-    id
-    title
-    author
-    createdAt
-  }
+## Patrón Observer
+
+Cuando se consulta `getPostsByTopic`, el sistema avisa automáticamente a todos los observadores registrados para ese tópico. El controller no sabe qué observadores existen ni qué hacen solo llama `notifyObservers` y cada quien reacciona por su cuenta.
+
+Hay un observer por tópico (`CampeonesObserver`, `ParticipantesObserver`, `CiudadesSedeObserver`), y Spring los inyecta automáticamente en el subject sin necesidad de registrarlos manualmente:
+
+```java
+@Component
+public class WorldCupTopicSubject implements TopicSubject {
+
+    private final List<TopicObserver> observers;
+
+    // Spring detecta todos los beans que implementan TopicObserver y los inyecta aquí
+    public WorldCupTopicSubject(List<TopicObserver> observers) {
+        this.observers = observers;
+    }
+
+    @Override
+    public void notifyObservers(WorldCupTopic topic, List<Post> results) {
+        observers.forEach(observer -> observer.onTopicQueried(topic, results));
+    }
 }
 ```
 
-### Mutation - Crear un nuevo post
+Cada observer filtra por su tópico y actúa solo cuando le corresponde:
 
-``` graphql
-mutation {
-  savePost(postDto: {
-    title: "Mi nuevo post"
-    content: "Contenido del post"
-    author: "Autor"
-    imageUrl: "https://ejemplo.com/imagen.jpg"
-  }) {
-    id
-    title
-    createdAt
-  }
+```java
+@Component
+public class CampeonesObserver implements TopicObserver {
+
+    @Override
+    public void onTopicQueried(WorldCupTopic topic, List<Post> results) {
+        if (topic != WorldCupTopic.CAMPEONES) return;
+        log.info("[Observer::Campeones] {} campeones encontrados.", results.size());
+    }
 }
 ```
 
-### Mutation - Eliminar un post
+---
 
-``` graphql
-mutation {
-  deletePostById(id: "1") {
-    id
-    title
-    deletedAt
-  }
+## Patrón Factory Method
+
+Cuando alguien guarda un post con `savePost`, el controller no construye el objeto directamente. Le pasa el trabajo a una fábrica concreta según el tópico, y cada fábrica sabe exactamente qué campos llenar:
+
+`PostFactoryProvider` es quien decide qué fábrica usar según el tópico del DTO:
+
+```java
+public PostFactory getFactory(String topic) {
+    PostFactory factory = factories.get(topic.toUpperCase());
+    if (factory == null) throw new IllegalArgumentException("Tópico desconocido: " + topic);
+    return factory;
 }
 ```
 
-## 🔧 Configuración Adicional
+---
 
-### Maven
+## Ejecución
 
-El proyecto utiliza las siguientes dependencias principales:
-
-- `spring-boot-starter-graphql`
-- `spring-boot-starter-web`
-- `lombok`
-- `spring-boot-starter-test`
-- `spring-graphql-test`
-
-### Lombok
-
-Se configura el procesador de anotaciones de Lombok para generar automáticamente getters, setters y constructores.
-
-## 📁 Estructura de Archivos
-
-``` 
-spring-graphql/
-├── src/
-│   ├── main/
-│   │   ├── java/com/davinchicoder/springgraphql/
-│   │   └── resources/
-│   │       ├── graphql/schema.graphqls
-│   │       └── application.yml
-│   └── test/
-├── pom.xml
-├── README.md
-└── otros archivos de configuración
+```bash
+JAVA_HOME=$(/usr/libexec/java_home -v 21) ./mvnw spring-boot:run
 ```
 
-## 🎯 Funcionalidades Implementadas
-
-- ✅ **API GraphQL** completa para gestión de posts
-- ✅ **Operaciones CRUD** (Create, Read, Update, Delete)
-- ✅ **Paginación** en consultas
-- ✅ **Mapeo de datos** entre DTOs y entidades
-- ✅ **Manejo de excepciones** básico
-- ✅ **Tests unitarios** configurados
-- ✅ **Configuración Maven** optimizada
-
-Esta documentación proporciona una visión completa del proyecto y debe servir como guía tanto para el desarrollo como
-para el mantenimiento de la aplicación.
+- **Endpoint GraphQL:** `http://localhost:8080/graphql`
+- **GraphiQL (playground):** `http://localhost:8080/graphiql`
